@@ -11,11 +11,16 @@ const port = process.env.PORT || 3000;
 app.use(cors({ origin: "http://localhost:5173", methods: ["GET", "POST"] }));
 
 io.on("connection", (socket) => {
-  console.log("Connection Established");
-  socket.emit("message", "new user connected");
+  socket.emit("notice", `Welcome ${socket.id}`);
 
-  io.on("disconnect", () => {
-    console.log("Disconnected");
+  socket.broadcast.emit("notice", `${socket.id} has entered`);
+
+  socket.on("chat message", (msg) => {
+    io.emit("chat message", msg);
+  });
+
+  socket.on("disconnect", () => {
+    io.emit("notice", `${socket.id} left`);
   });
 });
 
