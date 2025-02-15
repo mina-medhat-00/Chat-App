@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(cors({ origin: "http://localhost:5173", methods: ["GET", "POST"] }));
 
 io.on("connection", (socket) => {
-  socket.emit("notice", `Welcome ${socket.id}`);
+  socket.emit("notice", { sender: "board", message: `Welcome ${socket.id}` });
 
   socket.broadcast.emit("notice", `${socket.id} has entered`);
 
@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("notice", `${socket.id} left`);
+    io.emit("notice", { sender: "board", message: `${socket.id} left` });
   });
 });
 
