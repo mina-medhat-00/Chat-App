@@ -1,0 +1,76 @@
+h1 {
+  color: #f2f2f7;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+}
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  background: #f2f2f7;
+  border: 1px solid #d1d1d6;
+  border-radius: 0.25rem;
+  margin-bottom: 20px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+input:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
+}
+.credentials-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.credentials-form {
+  background-color: #f2f2f2;
+  color: #1c1c1e;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 400px;
+}
+.checkbox-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  flex-direction: row;
+  gap: 0.25rem;
+}
+.checkbox-container > label {
+  height: 100%;
+  margin: 0;
+}
+.checkbox-container > input {
+  height: 100%;
+  width: 14px;
+  margin: 0;
+}
+@media (max-width: 575.98px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  label {
+    font-size: 0.75rem;
+  }
+  input {
+    font-size: 0.75rem;
+  }
+  .credentials-form {
+    width: 250px;
+  }
+  .credentials-form > button {
+    font-size: 0.75rem;
+  }
+}
