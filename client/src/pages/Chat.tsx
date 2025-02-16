@@ -5,9 +5,10 @@ import "./Chat.css";
 export default function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
-    { sender: string; message: string }[]
+    { sender: string; content: string; timestamp: string }[]
   >([]);
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
+  const messageEndRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
@@ -19,7 +20,7 @@ export default function Chat() {
     });
 
     socketRef.current.on("chat message", (msg) => {
-      if (socketRef.current) {
+      if (socketRef.current && msg.content.trim()) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     });
@@ -31,12 +32,20 @@ export default function Chat() {
     };
   }, []);
 
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   function handleSubmit(e: React.FormEvent) {
+    const d = new Date();
     e.preventDefault();
     if (socketRef.current) {
       socketRef.current.emit("chat message", {
-        sender: socketRef.current.id,
-        message: message,
+        sender: socketRef.current.id ? socketRef.current.id.slice(0, 6) : null,
+        content: message,
+        timestamp: `${d.getHours()}:${d.getMinutes()}`,
       });
     }
     setMessage("");
@@ -44,15 +53,17 @@ export default function Chat() {
 
   return (
     <div className="chat-room">
-      <ul className="messages">
+      <ul className="messages" ref={messageEndRef}>
         {messages.map((msg, index) =>
           msg.sender === "board" ? (
             <li key={index} className="notice-bubble">
-              {msg.message}
+              <div>{msg.content}</div>
             </li>
           ) : (
             <li key={index} className="chat-bubble">
-              {`${msg.sender}: ${msg.message}`}
+              <div className="chat-bubble-sender">{msg.sender}</div>
+              <div className="chat-bubble-message">{msg.content}</div>
+              <div className="chat-bubble-timestamp">{msg.timestamp}</div>
             </li>
           )
         )}
