@@ -3,8 +3,14 @@
   margin: 0;
   padding: 0;
 }
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
 body {
-  font-family: Inter, system-ui, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #151515;
   color: #ffffff;
 }
@@ -12,13 +18,11 @@ li {
   list-style: none;
 }
 button {
-  font-family: Inter, system-ui, Helvetica, Arial, sans-serif;
   display: inline-block;
   padding: 12px 24px;
   background-color: #007aff;
   color: white;
   font-size: 1rem;
-  font-weight: 600;
   border: none;
   border-radius: 0.5rem;
   transition: all 0.2s ease;

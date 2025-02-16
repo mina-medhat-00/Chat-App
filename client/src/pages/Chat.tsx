@@ -5,13 +5,22 @@ import "./Chat.css";
 export default function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
-    { sender: string; content: string; timestamp: string }[]
+    { senderId: string; content: string; timestamp: string }[]
   >([]);
+  const [myId, setMyId] = useState("");
+
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   const messageEndRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
+
+    socketRef.current.on("connect", () => {
+      if (socketRef.current) {
+        console.log(typeof socketRef.current.id);
+        setMyId(socketRef.current.id ?? "");
+      }
+    });
 
     socketRef.current.on("notice", (msg) => {
       if (socketRef.current) {
@@ -40,12 +49,15 @@ export default function Chat() {
 
   function handleSubmit(e: React.FormEvent) {
     const d = new Date();
+    const hours = d.getHours().toString().padStart(2, "0");
+    const minutes = d.getMinutes().toString().padStart(2, "0");
+
     e.preventDefault();
     if (socketRef.current) {
       socketRef.current.emit("chat message", {
-        sender: socketRef.current.id ? socketRef.current.id.slice(0, 6) : null,
+        senderId: socketRef.current.id ? socketRef.current.id : null,
         content: message,
-        timestamp: `${d.getHours()}:${d.getMinutes()}`,
+        timestamp: `${hours}:${minutes}`,
       });
     }
     setMessage("");
@@ -55,22 +67,28 @@ export default function Chat() {
     <div className="chat-room">
       <ul className="messages" ref={messageEndRef}>
         {messages.map((msg, index) =>
-          msg.sender === "board" ? (
+          msg.senderId === "server" ? (
             <li key={index} className="notice-bubble">
               <div>{msg.content}</div>
             </li>
           ) : (
-            <li key={index} className="chat-bubble">
-              <div className="chat-bubble-sender">{msg.sender}</div>
-              <div className="chat-bubble-message">{msg.content}</div>
-              <div className="chat-bubble-timestamp">{msg.timestamp}</div>
+            <li
+              key={index}
+              className={
+                msg.senderId === myId
+                  ? "my-message-bubble"
+                  : "other-message-bubble"
+              }
+            >
+              <div className="bubble-sender">{msg.senderId}</div>
+              <div>{msg.content}</div>
+              <small className="bubble-timestamp">{msg.timestamp}</small>
             </li>
           )
         )}
       </ul>
       <form className="form" onSubmit={handleSubmit}>
         <input
-          className="input"
           type="text"
           autoComplete="off"
           value={message}
