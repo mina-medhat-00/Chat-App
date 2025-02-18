@@ -1,8 +1,23 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
-export default function Login() {
+interface LoginProps {
+  setCredentials: (credentials: { username: string; roomId: string }) => void;
+}
+
+export default function Login({ setCredentials }: LoginProps) {
+  const [username, setUsername] = useState("");
+  const [roomId, setRoomId] = useState("");
+
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (username.trim() && roomId.trim()) {
+      setCredentials({ username: username, roomId: roomId });
+      navigate("/chat");
+    }
   };
 
   return (
@@ -13,15 +28,26 @@ export default function Login() {
         action="submit"
         onSubmit={handleSubmit}
       >
-        <label htmlFor="email">Email</label>
-        <input type="email" id="email" name="email" required />
-        <label htmlFor="password">Password</label>
-        <input type="password" id="password" name="password" required />
-        <div className="checkbox-container">
-          <label htmlFor="remember-me">Remember Me</label>
-          <input type="checkbox" id="remember-me" name="remember-me" />
-        </div>
-        <button>Login</button>
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          autoComplete="off"
+          required
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <label htmlFor="roomId">Room ID</label>
+        <input
+          type="text"
+          id="roomId"
+          name="roomId"
+          autoComplete="off"
+          required
+          onChange={(e) => setRoomId(e.target.value)}
+        />
+        <button>Create Room</button>
+        <div></div>
       </form>
     </div>
   );

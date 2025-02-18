@@ -2,34 +2,41 @@ import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import "./Chat.css";
 
-export default function Chat() {
+interface Credentials {
+  username: string;
+  roomId: string;
+}
+
+export default function Chat({ credentials }: { credentials: Credentials }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
     { senderId: string; content: string; timestamp: string }[]
   >([]);
   const [myId, setMyId] = useState("");
-
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   const messageEndRef = useRef<HTMLUListElement | null>(null);
+
+  const room = credentials.roomId;
 
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
 
+    socketRef.current.emit("join-room", room);
+
     socketRef.current.on("connect", () => {
       if (socketRef.current) {
-        console.log(typeof socketRef.current.id);
         setMyId(socketRef.current.id ?? "");
       }
     });
 
-    socketRef.current.on("notice", (msg) => {
+    socketRef.current.on("notification", (msg) => {
       if (socketRef.current) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     });
 
-    socketRef.current.on("chat message", (msg) => {
-      if (socketRef.current && msg.content.trim()) {
+    socketRef.current.on("chat-message", (msg) => {
+      if (socketRef.current) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     });
@@ -39,7 +46,7 @@ export default function Chat() {
         socketRef.current.disconnect();
       }
     };
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -53,12 +60,16 @@ export default function Chat() {
     const minutes = d.getMinutes().toString().padStart(2, "0");
 
     e.preventDefault();
-    if (socketRef.current) {
-      socketRef.current.emit("chat message", {
-        senderId: socketRef.current.id ? socketRef.current.id : null,
-        content: message,
-        timestamp: `${hours}:${minutes}`,
-      });
+    if (socketRef.current && message.trim()) {
+      socketRef.current.emit(
+        "chat-message",
+        {
+          senderId: socketRef.current.id ? socketRef.current.id : null,
+          content: message,
+          timestamp: `${hours}:${minutes}`,
+        },
+        room
+      );
     }
     setMessage("");
   }
@@ -68,7 +79,7 @@ export default function Chat() {
       <ul className="messages" ref={messageEndRef}>
         {messages.map((msg, index) =>
           msg.senderId === "server" ? (
-            <li key={index} className="notice-bubble">
+            <li key={index} className="notification-bubble">
               <div>{msg.content}</div>
             </li>
           ) : (
@@ -87,7 +98,7 @@ export default function Chat() {
           )
         )}
       </ul>
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="message-form" onSubmit={handleSubmit}>
         <input
           type="text"
           autoComplete="off"

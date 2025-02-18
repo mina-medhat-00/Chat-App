@@ -41,22 +41,6 @@ input:focus {
   gap: 0.25rem;
   width: 400px;
 }
-.checkbox-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  flex-direction: row;
-  gap: 0.25rem;
-}
-.checkbox-container > label {
-  height: 100%;
-  margin: 0;
-}
-.checkbox-container > input {
-  height: 100%;
-  width: 14px;
-  margin: 0;
-}
 @media (max-width: 575.98px) {
   h1 {
     font-size: 1.5rem;

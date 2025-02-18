@@ -4,7 +4,7 @@
   align-items: center;
   gap: 10px;
 }
-.form {
+.message-form {
   position: fixed;
   left: 0;
   right: 0;
@@ -12,14 +12,14 @@
   display: flex;
   align-items: center;
 }
-.form > input,
-.form > button {
+.message-form > input,
+.message-form > button {
   height: 40px;
   font-size: 16px;
   margin: 0;
   border-radius: 0%;
 }
-.form > input {
+.message-form > input {
   flex-grow: 1;
   outline: 0;
   border-style: none;
@@ -40,7 +40,7 @@
 .messages > li {
   padding: 0.5rem 1rem;
 }
-.notice-bubble {
+.notification-bubble {
   text-align: center;
   font-weight: 700;
 }
