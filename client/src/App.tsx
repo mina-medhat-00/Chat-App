@@ -6,8 +6,8 @@ import { useState } from "react";
 export default function App() {
   const [credentials, setCredentials] = useState<{
     username: string;
-    roomId: string;
-  }>({ username: "", roomId: "" });
+    room: string;
+  }>({ username: "", room: "" });
 
   return (
     <Router>

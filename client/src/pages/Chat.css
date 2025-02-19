@@ -1,84 +1,116 @@
-.chat-room {
+.chat__room {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  height: 100vh;
 }
-.message-form {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.chat__room__banner {
+  width: 100%;
+  background-color: #007aff;
+  color: white;
+  padding: 12px;
+  font-size: 1.25rem;
+}
+.message__form {
+  width: 100%;
+  height: 40px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
-.message-form > input,
-.message-form > button {
-  height: 40px;
-  font-size: 16px;
+.message__form > input,
+.message__form > button {
+  height: 100%;
+  font-size: 1rem;
   margin: 0;
   border-radius: 0%;
 }
-.message-form > input {
+.message__form > input {
   flex-grow: 1;
   outline: 0;
   border-style: none;
 }
 .messages {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  bottom: 40px;
-  width: 100%;
-  max-height: calc(100vh - 40px);
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: auto;
   overflow-x: hidden;
+  list-style: none;
 }
 .messages > li {
   padding: 0.5rem 1rem;
 }
-.notification-bubble {
+.notification {
   text-align: center;
   font-weight: 700;
 }
-.my-message-bubble,
-.other-message-bubble {
+.bubble__sender,
+.bubble__receiver {
+  width: 400px;
   height: auto;
-  width: 350px;
-  margin: 12px;
+  margin: 8px;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 1rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-.my-message-bubble {
+.bubble__sender {
   margin-left: auto;
   background-color: #087cfc;
 }
-.other-message-bubble {
+.bubble__receiver {
   color: #0e0d0d;
   background-color: #f0ecec;
 }
-.other-message-bubble > .bubble-timestamp {
+.bubble__receiver > .bubble__timestamp {
   color: #0e0d0d;
 }
-.bubble-sender {
+.bubble__username {
   font-weight: 700;
 }
-.bubble-timestamp {
+.bubble__timestamp {
   float: right;
-  font-size: 12px;
+  font-size: 0.86rem;
+  padding: 0;
+  margin: 0;
 }
-@media (max-width: 575.98px) {
-  .my-message-bubble,
-  .other-message-bubble {
-    width: 200px;
-    font-size: 14px;
+@media (max-width: 575px) {
+  .chat__room__banner {
+    font-size: 1rem;
   }
-  .bubble-timestamp {
-    font-size: 10px;
+  .bubble__sender,
+  .bubble__receiver,
+  .message__form > input,
+  .message__form > button {
+    font-size: 0.9rem;
+  }
+  .bubble__sender,
+  .bubble__receiver {
+    max-width: 300px;
+  }
+  .bubble__timestamp {
+    font-size: 0.65rem;
+  }
+}
+@media (max-width: 375px) {
+  .chat__room__banner {
+    font-size: 0.85rem;
+  }
+  .bubble__sender,
+  .bubble__receiver,
+  .message__form > input,
+  .message__form > button {
+    font-size: 0.75rem;
+  }
+  .bubble__sender,
+  .bubble__receiver {
+    max-width: 200px;
+  }
+  .bubble__timestamp {
+    font-size: 0.5rem;
   }
 }

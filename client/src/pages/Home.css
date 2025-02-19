@@ -6,13 +6,13 @@ h1 {
 }
 label {
   display: block;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 input {
   width: 100%;
-  padding: 14px;
-  font-size: 1rem;
+  padding: 8px;
+  font-size: 1.25rem;
   background: #f2f2f7;
   border: 1px solid #d1d1d6;
   border-radius: 0.25rem;
@@ -24,37 +24,47 @@ input:focus {
   border-color: #007aff;
   box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
 }
-.credentials-container {
+.auth__container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
 }
-.credentials-form {
-  background-color: #f2f2f2;
-  color: #1c1c1e;
-  padding: 1rem;
-  border-radius: 0.5rem;
+.auth__form {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  width: 400px;
+  min-width: 400px;
+  max-width: 500px;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: #f2f2f2;
+  color: #1c1c1e;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 575px) {
   h1 {
     font-size: 1.5rem;
   }
-  label {
-    font-size: 0.75rem;
+  .auth__form > button,
+  label,
+  input {
+    font-size: 0.9rem;
   }
+  .auth__form {
+    min-width: 300px;
+  }
+}
+@media (max-width: 375px) {
+  h1 {
+    font-size: 1.25rem;
+  }
+  .auth__form > button,
+  label,
   input {
     font-size: 0.75rem;
   }
-  .credentials-form {
-    width: 250px;
-  }
-  .credentials-form > button {
-    font-size: 0.75rem;
+  .auth__form {
+    min-width: 250px;
   }
 }

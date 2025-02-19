@@ -4,7 +4,7 @@ import "./Chat.css";
 
 interface Credentials {
   username: string;
-  roomId: string;
+  room: string;
 }
 
 export default function Chat({ credentials }: { credentials: Credentials }) {
@@ -16,8 +16,7 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   const messageEndRef = useRef<HTMLUListElement | null>(null);
 
-  const room = credentials.roomId;
-
+  const room = credentials.room;
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
 
@@ -75,30 +74,29 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
   }
 
   return (
-    <div className="chat-room">
+    <div className="chat__room">
+      <div className="chat__room__banner">ROOM</div>
       <ul className="messages" ref={messageEndRef}>
         {messages.map((msg, index) =>
           msg.senderId === "server" ? (
-            <li key={index} className="notification-bubble">
+            <li key={index} className="notification">
               <div>{msg.content}</div>
             </li>
           ) : (
             <li
               key={index}
               className={
-                msg.senderId === myId
-                  ? "my-message-bubble"
-                  : "other-message-bubble"
+                msg.senderId === myId ? "bubble__sender" : "bubble__receiver"
               }
             >
-              <div className="bubble-sender">{msg.senderId}</div>
+              <div className="bubble__username">{msg.senderId}</div>
               <div>{msg.content}</div>
-              <small className="bubble-timestamp">{msg.timestamp}</small>
+              <small className="bubble__timestamp">{msg.timestamp}</small>
             </li>
           )
         )}
       </ul>
-      <form className="message-form" onSubmit={handleSubmit}>
+      <form className="message__form" onSubmit={handleSubmit}>
         <input
           type="text"
           autoComplete="off"
