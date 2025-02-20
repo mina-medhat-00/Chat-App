@@ -17,18 +17,20 @@ app.use(
 );
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (room) => {
+  socket.on("join-room", ({ username, room }) => {
     socket.join(room);
     if (room) {
       socket.to(room).emit("notification", {
-        senderId: "server",
-        content: `${socket.id} has entered`,
+        userId: "0",
+        username: "server",
+        content: `${username} joined the chat`,
         timestamp: createTimestamp(),
       });
       socket.on("disconnect", () => {
         socket.to(room).emit("notification", {
-          senderId: "server",
-          content: `${socket.id} left`,
+          userId: "0",
+          username: "server",
+          content: `${username} left`,
           timestamp: createTimestamp(),
         });
       });

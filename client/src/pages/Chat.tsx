@@ -10,21 +10,22 @@ interface Credentials {
 export default function Chat({ credentials }: { credentials: Credentials }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
-    { senderId: string; content: string; timestamp: string }[]
+    { userId: string; username: string; content: string; timestamp: string }[]
   >([]);
-  const [myId, setMyId] = useState("");
+  const [currentId, setCurrentId] = useState("");
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   const messageEndRef = useRef<HTMLUListElement | null>(null);
-
+  const username = credentials.username;
   const room = credentials.room;
+
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
 
-    socketRef.current.emit("join-room", room);
+    socketRef.current.emit("join-room", { username, room });
 
     socketRef.current.on("connect", () => {
       if (socketRef.current) {
-        setMyId(socketRef.current.id ?? "");
+        setCurrentId(socketRef.current.id ?? "");
       }
     });
 
@@ -63,7 +64,8 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
       socketRef.current.emit(
         "chat-message",
         {
-          senderId: socketRef.current.id ? socketRef.current.id : null,
+          userId: socketRef.current.id ? socketRef.current.id : null,
+          username: username,
           content: message,
           timestamp: `${hours}:${minutes}`,
         },
@@ -75,10 +77,12 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
 
   return (
     <div className="chat__room">
-      <div className="chat__room__banner">ROOM</div>
+      <div className="chat__room__banner">
+        {credentials.room ? credentials.room.toUpperCase() : "Private Chat"}
+      </div>
       <ul className="messages" ref={messageEndRef}>
         {messages.map((msg, index) =>
-          msg.senderId === "server" ? (
+          msg.userId === "0" ? (
             <li key={index} className="notification">
               <div>{msg.content}</div>
             </li>
@@ -86,11 +90,11 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
             <li
               key={index}
               className={
-                msg.senderId === myId ? "bubble__sender" : "bubble__receiver"
+                msg.userId === currentId ? "bubble__sender" : "bubble__receiver"
               }
             >
-              <div className="bubble__username">{msg.senderId}</div>
-              <div>{msg.content}</div>
+              <div className="bubble__username">{msg.username}</div>
+              <div className="bubble__content">{msg.content}</div>
               <small className="bubble__timestamp">{msg.timestamp}</small>
             </li>
           )
