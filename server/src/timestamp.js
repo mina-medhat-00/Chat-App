@@ -5,4 +5,4 @@ const createTimestamp = () => {
   return `${hours}:${minutes}`;
 };
 
-module.exports = createTimestamp;
+export default createTimestamp;

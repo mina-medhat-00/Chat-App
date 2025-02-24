@@ -2,34 +2,32 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
-function ErrorMessage({ flag }: { flag: boolean }) {
-  return flag ? <p>Please enter valid username and room name</p> : null;
-}
-
 interface LoginProps {
   setCredentials: (credentials: { username: string; room: string }) => void;
 }
 
 export default function Login({ setCredentials }: LoginProps) {
-  const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
-  const [error, setError] = useState(false);
+  const [usernameInput, setUsername] = useState("");
+  const [roomInput, setRoom] = useState("");
   const navigate = useNavigate();
 
-  const validateInput = (value: string) => {
+  const validate = (value: string) => {
     const regex = /^[A-Za-z0-9\s]{1,32}$/;
     return regex.test(value) ? true : false;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const usernameVal = validateInput(username);
-    const roomVal = validateInput(room);
+    const usernameVal = validate(usernameInput);
+    const roomVal = validate(roomInput);
     if (usernameVal && roomVal) {
-      setCredentials({ username: username.trim(), room: room.trim() });
+      setCredentials({
+        username: usernameInput.trim(),
+        room: roomInput.trim(),
+      });
       navigate("/chat");
     } else {
-      setError(true);
+      alert("Invalid username or room name");
     }
   };
 
@@ -54,9 +52,6 @@ export default function Login({ setCredentials }: LoginProps) {
           onChange={(e) => setRoom(e.target.value)}
         />
         <button>Create Room</button>
-        <div className="error__message">
-          <ErrorMessage flag={error} />
-        </div>
       </form>
     </div>
   );

@@ -1,13 +1,13 @@
-const http = require("http");
-const express = require("express");
-const cors = require("cors");
-const { Server } = require("socket.io");
-const createTimestamp = require("./timestamp");
+import { createServer } from "http";
+import express from "express";
+import cors from "cors";
+import { Server } from "socket.io";
+import createTimestamp from "./timestamp.js";
 
 const app = express();
-const server = http.createServer(app);
+const server = createServer(app);
 const io = new Server(server);
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 app.use(
   cors({
@@ -21,14 +21,14 @@ io.on("connection", (socket) => {
     socket.join(room);
     if (room) {
       socket.to(room).emit("notification", {
-        userId: "0",
+        id: "0",
         username: "server",
         content: `${username} joined the chat`,
         timestamp: createTimestamp(),
       });
       socket.on("disconnect", () => {
         socket.to(room).emit("notification", {
-          userId: "0",
+          id: "0",
           username: "server",
           content: `${username} left`,
           timestamp: createTimestamp(),

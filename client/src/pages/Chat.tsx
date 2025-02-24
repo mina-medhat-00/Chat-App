@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import "./Chat.css";
 
@@ -10,14 +11,17 @@ interface Credentials {
 export default function Chat({ credentials }: { credentials: Credentials }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
-    { userId: string; username: string; content: string; timestamp: string }[]
+    { id: string; username: string; content: string; timestamp: string }[]
   >([]);
   const [currentId, setCurrentId] = useState("");
+  const [hasMounted, setHasMounted] = useState(false);
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   const messageEndRef = useRef<HTMLUListElement | null>(null);
+  const navigate = useNavigate();
   const username = credentials.username;
   const room = credentials.room;
 
+  // setting up client instance
   useEffect(() => {
     socketRef.current = io("http://localhost:3000");
 
@@ -46,13 +50,29 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
         socketRef.current.disconnect();
       }
     };
-  }, [room]);
+  }, [username, room]);
 
+  // scroll to page end for every new message
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // navigate to home page on page reload
+  useEffect(() => {
+    if (!hasMounted) {
+      setHasMounted(true);
+      return;
+    }
+    const isReloaded = localStorage.getItem("isReloaded");
+    if (isReloaded) {
+      localStorage.removeItem("isReloaded");
+      navigate("/");
+    } else {
+      localStorage.setItem("isReloaded", "true");
+    }
+  }, [hasMounted, navigate]);
 
   function handleSubmit(e: React.FormEvent) {
     const d = new Date();
@@ -64,7 +84,7 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
       socketRef.current.emit(
         "chat-message",
         {
-          userId: socketRef.current.id ? socketRef.current.id : null,
+          id: socketRef.current.id ?? null,
           username: username,
           content: message,
           timestamp: `${hours}:${minutes}`,
@@ -77,12 +97,10 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
 
   return (
     <div className="chat__room">
-      <div className="chat__room__banner">
-        {credentials.room ? credentials.room.toUpperCase() : "Private Chat"}
-      </div>
+      <div className="chat__room__banner">{credentials.room}</div>
       <ul className="messages" ref={messageEndRef}>
         {messages.map((msg, index) =>
-          msg.userId === "0" ? (
+          msg.id === "0" ? (
             <li key={index} className="notification">
               <div>{msg.content}</div>
             </li>
@@ -90,7 +108,7 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
             <li
               key={index}
               className={
-                msg.userId === currentId ? "bubble__sender" : "bubble__receiver"
+                msg.id === currentId ? "bubble__sender" : "bubble__receiver"
               }
             >
               <div className="bubble__username">{msg.username}</div>
