@@ -14,7 +14,6 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
     { id: string; username: string; content: string; timestamp: string }[]
   >([]);
   const [currentId, setCurrentId] = useState("");
-  const [hasMounted, setHasMounted] = useState(false);
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
   const messageEndRef = useRef<HTMLUListElement | null>(null);
   const navigate = useNavigate();
@@ -48,9 +47,12 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
+        socketRef.current.on("disconnect", () => {
+          navigate("/");
+        });
       }
     };
-  }, [username, room]);
+  }, [username, room, navigate]);
 
   // scroll to page end for every new message
   useEffect(() => {
@@ -61,8 +63,7 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
 
   // navigate to home page on page reload
   useEffect(() => {
-    if (!hasMounted) {
-      setHasMounted(true);
+    if (username && room) {
       return;
     }
     const isReloaded = localStorage.getItem("isReloaded");
@@ -72,14 +73,14 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
     } else {
       localStorage.setItem("isReloaded", "true");
     }
-  }, [hasMounted, navigate]);
+  }, [username, room, navigate]);
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     const d = new Date();
     const hours = d.getHours().toString().padStart(2, "0");
     const minutes = d.getMinutes().toString().padStart(2, "0");
 
-    e.preventDefault();
+    event.preventDefault();
     if (socketRef.current && message.trim()) {
       socketRef.current.emit(
         "chat-message",
@@ -122,6 +123,8 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
         <input
           type="text"
           autoComplete="off"
+          placeholder="Type your message..."
+          maxLength={750}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />

@@ -6,9 +6,9 @@
 }
 .chat__room__banner {
   width: 100%;
-  background-color: #087cfc;
+  background-color: #353535;
   text-align: center;
-  color: white;
+  color: #fff;
   padding: 12px;
   font-size: 1.25rem;
   font-weight: 700;
@@ -49,6 +49,7 @@
 .notification {
   text-align: center;
   font-weight: 700;
+  font-size: 1rem;
 }
 .bubble__sender,
 .bubble__receiver {
@@ -63,11 +64,11 @@
 .bubble__sender {
   margin-left: auto;
   background-color: #087cfc;
-  color: #f0ffff;
+  color: #fff;
 }
 .bubble__receiver {
   background-color: #f0ecec;
-  color: #0e0d0d;
+  color: #000;
 }
 .bubble__username {
   font-weight: 700;
@@ -85,7 +86,8 @@
   .bubble__sender,
   .bubble__receiver,
   .message__form > input,
-  .message__form > button {
+  .message__form > button,
+  .notification {
     font-size: 0.9rem;
   }
   .bubble__sender,
@@ -103,7 +105,8 @@
   .bubble__sender,
   .bubble__receiver,
   .message__form > input,
-  .message__form > button {
+  .message__form > button,
+  .notification {
     font-size: 0.75rem;
   }
   .bubble__sender,

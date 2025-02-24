@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
-interface LoginProps {
+interface RoomManagerProps {
   setCredentials: (credentials: { username: string; room: string }) => void;
 }
 
-export default function Login({ setCredentials }: LoginProps) {
+export default function RoomManager({ setCredentials }: RoomManagerProps) {
   const [usernameInput, setUsername] = useState("");
   const [roomInput, setRoom] = useState("");
   const navigate = useNavigate();
@@ -16,17 +16,20 @@ export default function Login({ setCredentials }: LoginProps) {
     return regex.test(value) ? true : false;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const usernameVal = validate(usernameInput);
-    const roomVal = validate(roomInput);
-    if (usernameVal && roomVal) {
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const usernameFlag = validate(usernameInput);
+    const roomFlag = validate(roomInput);
+
+    if (usernameFlag && roomFlag) {
       setCredentials({
         username: usernameInput.trim(),
         room: roomInput.trim(),
       });
       navigate("/chat");
     } else {
+      setUsername("");
+      setRoom("");
       alert("Invalid username or room name");
     }
   };
@@ -41,7 +44,8 @@ export default function Login({ setCredentials }: LoginProps) {
           id="username"
           name="username"
           autoComplete="off"
-          onChange={(e) => setUsername(e.target.value)}
+          value={usernameInput}
+          onChange={(event) => setUsername(event.target.value)}
         />
         <label htmlFor="room">Room</label>
         <input
@@ -49,7 +53,8 @@ export default function Login({ setCredentials }: LoginProps) {
           id="room"
           name="room"
           autoComplete="off"
-          onChange={(e) => setRoom(e.target.value)}
+          value={roomInput}
+          onChange={(event) => setRoom(event.target.value)}
         />
         <button>Create Room</button>
       </form>

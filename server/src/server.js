@@ -22,8 +22,8 @@ io.on("connection", (socket) => {
     if (room) {
       socket.to(room).emit("notification", {
         id: "0",
-        username: "server",
-        content: `${username} joined the chat`,
+        username: "__server__",
+        content: `${username} has joined`,
         timestamp: createTimestamp(),
       });
       socket.on("disconnect", () => {

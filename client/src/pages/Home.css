@@ -42,10 +42,6 @@ input:focus {
   background-color: #f2f2f2;
   color: #1c1c1e;
 }
-.error__message {
-  color: #dc143c;
-  text-align: center;
-}
 @media (max-width: 575px) {
   h1 {
     font-size: 1.5rem;
@@ -57,6 +53,7 @@ input:focus {
   }
   .auth__form {
     min-width: 300px;
+    max-width: 500px;
   }
 }
 @media (max-width: 375px) {
@@ -69,6 +66,7 @@ input:focus {
     font-size: 0.75rem;
   }
   .auth__form {
-    min-width: 250px;
+    min-width: 150px;
+    max-width: 300px;
   }
 }
