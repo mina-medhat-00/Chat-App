@@ -48,7 +48,7 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current.on("disconnect", () => {
-          navigate("/");
+          navigate("/rooms");
         });
       }
     };
@@ -69,7 +69,7 @@ export default function Chat({ credentials }: { credentials: Credentials }) {
     const isReloaded = localStorage.getItem("isReloaded");
     if (isReloaded) {
       localStorage.removeItem("isReloaded");
-      navigate("/");
+      navigate("/rooms");
     } else {
       localStorage.setItem("isReloaded", "true");
     }

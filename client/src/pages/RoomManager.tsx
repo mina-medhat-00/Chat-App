@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Home.css";
+import "./Form.css";
 
 interface RoomManagerProps {
   setCredentials: (credentials: { username: string; room: string }) => void;
@@ -11,27 +11,13 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
   const [roomInput, setRoom] = useState("");
   const navigate = useNavigate();
 
-  const validate = (value: string) => {
-    const regex = /^[A-Za-z0-9\s]{1,32}$/;
-    return regex.test(value) ? true : false;
-  };
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const usernameFlag = validate(usernameInput);
-    const roomFlag = validate(roomInput);
-
-    if (usernameFlag && roomFlag) {
-      setCredentials({
-        username: usernameInput.trim(),
-        room: roomInput.trim(),
-      });
-      navigate("/chat");
-    } else {
-      setUsername("");
-      setRoom("");
-      alert("Invalid username or room name");
-    }
+    setCredentials({
+      username: usernameInput.trim(),
+      room: roomInput.trim(),
+    });
+    navigate("/chat");
   };
 
   return (
@@ -44,6 +30,9 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
           id="username"
           name="username"
           autoComplete="off"
+          pattern="[A-Za-z0-9\s]{1,32}"
+          title="username must be alphanumeric, 32 characters max"
+          required
           value={usernameInput}
           onChange={(event) => setUsername(event.target.value)}
         />
@@ -53,6 +42,9 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
           id="room"
           name="room"
           autoComplete="off"
+          pattern="[A-Za-z0-9\s]{1,32}"
+          title="room name must be alphanumeric, 32 characters max"
+          required
           value={roomInput}
           onChange={(event) => setRoom(event.target.value)}
         />

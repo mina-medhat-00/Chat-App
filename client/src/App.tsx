@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import RoomManager from "./pages/Home";
+import Login from "./pages/Login";
+import RoomManager from "./pages/RoomManager";
 import Chat from "./pages/Chat";
 
 export default function App() {
@@ -12,8 +13,9 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Login />}></Route>
         <Route
-          path="/"
+          path="/rooms"
           element={<RoomManager setCredentials={setCredentials} />}
         ></Route>
         <Route

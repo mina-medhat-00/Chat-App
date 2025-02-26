@@ -2,12 +2,14 @@ import { createServer } from "http";
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
+import "dotenv/config";
+import process from "process";
 import createTimestamp from "./timestamp.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(
   cors({
@@ -29,7 +31,7 @@ io.on("connection", (socket) => {
       socket.on("disconnect", () => {
         socket.to(room).emit("notification", {
           id: "0",
-          username: "server",
+          username: "__server__",
           content: `${username} left`,
           timestamp: createTimestamp(),
         });
