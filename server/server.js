@@ -4,7 +4,8 @@ import cors from "cors";
 import { Server } from "socket.io";
 import "dotenv/config";
 import process from "process";
-import createTimestamp from "./timestamp.js";
+import userRoute from "./src/routes/userRoute.js";
+import createTimestamp from "./src/utils/timestamp.js";
 
 const app = express();
 const server = createServer(app);
@@ -17,6 +18,8 @@ app.use(
     methods: ["GET", "POST"],
   })
 );
+app.use(express.json());
+app.use("/api/users", userRoute);
 
 io.on("connection", (socket) => {
   socket.on("join-room", ({ username, room }) => {
