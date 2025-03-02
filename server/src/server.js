@@ -4,7 +4,6 @@ import cors from "cors";
 import { Server } from "socket.io";
 import "dotenv/config";
 import process from "process";
-import createTimestamp from "./timestamp.js";
 
 const app = express();
 const server = createServer(app);
@@ -26,14 +25,14 @@ io.on("connection", (socket) => {
         id: "0",
         username: "__server__",
         content: `${username} has joined`,
-        timestamp: createTimestamp(),
+        timestamp: Date.now().toString(),
       });
       socket.on("disconnect", () => {
         socket.to(room).emit("notification", {
           id: "0",
           username: "__server__",
           content: `${username} left`,
-          timestamp: createTimestamp(),
+          timestamp: Date.now().toString(),
         });
       });
     }
@@ -49,5 +48,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(port, () => {
-  console.log(`Running on http://localhost:${port}`);
+  console.log(`Running on ws://localhost:${port}`);
 });
