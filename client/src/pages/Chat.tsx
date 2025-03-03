@@ -2,27 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import "./Chat.css";
+import { Credentials, Message } from "../types";
 
-interface Credentials {
-  username: string;
-  room: string;
+interface ChatProps {
+  credentials: Credentials;
 }
 
-export default function Chat({ credentials }: { credentials: Credentials }) {
+export default function Chat({ credentials }: ChatProps) {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<
-    { id: string; username: string; content: string; timestamp: string }[]
-  >([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [currentId, setCurrentId] = useState("");
-  const socketRef = useRef<ReturnType<typeof io> | null>(null);
-  const messageEndRef = useRef<HTMLUListElement | null>(null);
+  const socketRef = useRef<ReturnType<typeof io>>(null);
+  const messageEndRef = useRef<HTMLUListElement>(null);
   const navigate = useNavigate();
   const username = credentials.username;
   const room = credentials.room;
 
   // setting up client instance
   useEffect(() => {
-    socketRef.current = io("http://localhost:3000");
+    socketRef.current = io("ws://localhost:3000");
 
     socketRef.current.emit("join-room", { username, room });
 

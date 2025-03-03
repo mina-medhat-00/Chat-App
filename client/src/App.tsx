@@ -3,12 +3,13 @@ import { useState } from "react";
 import Login from "./pages/Login";
 import RoomManager from "./pages/RoomManager";
 import Chat from "./pages/Chat";
+import { Credentials } from "./types";
 
 export default function App() {
-  const [credentials, setCredentials] = useState<{
-    username: string;
-    room: string;
-  }>({ username: "", room: "" });
+  const [credentials, setCredentials] = useState<Credentials>({
+    username: "",
+    room: "",
+  });
 
   return (
     <Router>
