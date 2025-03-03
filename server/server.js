@@ -4,6 +4,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 import "dotenv/config";
 import process from "process";
+import userRoute from "./src/routes/userRoute.js";
 
 const app = express();
 const server = createServer(app);

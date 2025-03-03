@@ -14,12 +14,11 @@ export default function Login() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: emailInput, password: passwordInput }),
     });
-    const data = await response.json();
+    const result = await response.json();
     if (response.ok) {
-      console.log(data);
-      // navigate("/rooms");
+      navigate("/rooms");
     } else {
-      console.log(data);
+      alert(result.error);
     }
   };
 

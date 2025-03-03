@@ -17,15 +17,19 @@ const userController = (req, res) => {
   const errors = validationResult(req);
 
   db.forEach((document) => {
-    if (JSON.stringify(document) === JSON.stringify(credentials)) {
-      return res.status(200).json({ notice: "login successful" });
+    if (credentials.email === document.email) {
+      if (credentials.password === document.password) {
+        return res.status(200).json({ message: "login successful" });
+      } else {
+        return res.status(401).json({ error: "incorrect password" });
+      }
     }
   });
 
   if (errors.isEmpty()) {
-    res.status(201).json({ notice: "registration successful" });
+    res.status(201).json({ message: "registration successful" });
   } else {
-    res.status(400).json({ error: errors });
+    res.status(400).json({ error: "invalid email or password" });
   }
 };
 
