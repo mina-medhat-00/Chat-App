@@ -7,17 +7,42 @@ interface RoomManagerProps {
 }
 
 export default function RoomManager({ setCredentials }: RoomManagerProps) {
-  const [usernameInput, setUsername] = useState("");
-  const [roomInput, setRoom] = useState("");
+  const initialValues = { username: "", room: "" };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState(initialValues);
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    setCredentials({
-      username: usernameInput.trim(),
-      room: roomInput.trim(),
-    });
-    navigate("/chat");
+  const validate = (values: { username: string; room: string }) => {
+    const errors = initialValues;
+    const regex = /^[A-Za-z0-9s]{1,32}$/;
+
+    if (!regex.test(values.username)) {
+      errors.username = "invalid username";
+    }
+    if (!regex.test(values.room)) {
+      errors.room = "invalid room name";
+    }
+    return errors;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const errors = validate(formValues);
+    setFormErrors(errors);
+
+    if (!errors.username && !errors.room) {
+      console.log("success");
+      setCredentials({
+        username: formValues.username.trim(),
+        room: formValues.room.trim(),
+      });
+      navigate("/chat");
+    }
   };
 
   return (
@@ -27,27 +52,19 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
         <label htmlFor="username">Username</label>
         <input
           type="text"
-          id="username"
           name="username"
-          autoComplete="off"
-          pattern="[A-Za-z0-9\s]{1,32}"
-          title="username must be alphanumeric, 32 characters max"
-          required
-          value={usernameInput}
-          onChange={(event) => setUsername(event.target.value)}
+          value={formValues.username}
+          onChange={(e) => handleChange(e)}
         />
+        <p className="error__message">{formErrors.username}</p>
         <label htmlFor="room">Room</label>
         <input
           type="text"
-          id="room"
           name="room"
-          autoComplete="off"
-          pattern="[A-Za-z0-9\s]{1,32}"
-          title="room name must be alphanumeric, 32 characters max"
-          required
-          value={roomInput}
-          onChange={(event) => setRoom(event.target.value)}
+          value={formValues.room}
+          onChange={(e) => handleChange(e)}
         />
+        <p className="error__message">{formErrors.room}</p>
         <button>Create Room</button>
       </form>
     </div>

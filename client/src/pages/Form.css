@@ -16,7 +16,6 @@ input {
   background: #f2f2f7;
   border: 1px solid #d1d1d6;
   border-radius: 0.25rem;
-  margin-bottom: 20px;
   outline: none;
   transition: all 0.3s ease;
 }
@@ -34,7 +33,7 @@ input:focus {
 .auth__form {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
   min-width: 400px;
   max-width: 500px;
   border-radius: 0.5rem;
@@ -42,16 +41,16 @@ input:focus {
   background-color: #f2f2f2;
   color: #1c1c1e;
 }
-.button__container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.error__message {
+  color: #f00;
+  font-size: 1rem;
 }
 @media (max-width: 575px) {
   h1 {
     font-size: 1.5rem;
   }
   .auth__form > button,
+  .error__message,
   label,
   input {
     font-size: 0.9rem;
@@ -66,6 +65,7 @@ input:focus {
     font-size: 1.25rem;
   }
   .auth__form > button,
+  .error__message,
   label,
   input {
     font-size: 0.75rem;

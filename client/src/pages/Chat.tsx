@@ -67,7 +67,7 @@ export default function Chat({ credentials }: ChatProps) {
     const isReloaded = localStorage.getItem("isReloaded");
     if (isReloaded) {
       localStorage.removeItem("isReloaded");
-      navigate("/rooms");
+      navigate("/");
     } else {
       localStorage.setItem("isReloaded", "true");
     }
