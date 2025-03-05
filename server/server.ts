@@ -6,9 +6,15 @@ import "dotenv/config";
 import process from "process";
 import userRoute from "./src/routes/userRoute.js";
 
+import { ChatMessageEvent, NotificationEvent } from "../client/src/types.js";
+
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 const port = process.env.PORT || 3000;
 
 app.use(
@@ -24,24 +30,27 @@ io.on("connection", (socket) => {
   socket.on("join-room", ({ username, room }) => {
     socket.join(room);
     if (room) {
-      socket.to(room).emit("notification", {
+      const joinedEvent: NotificationEvent = {
         id: "0",
         username: "__server__",
         content: `${username} has joined`,
-        timestamp: Date.now().toString(),
-      });
+        timestamp: Date.now(),
+      };
+      socket.to(room).emit("notification", joinedEvent);
+
       socket.on("disconnect", () => {
-        socket.to(room).emit("notification", {
+        const leaveEvent: NotificationEvent = {
           id: "0",
           username: "__server__",
           content: `${username} left`,
-          timestamp: Date.now().toString(),
-        });
+          timestamp: Date.now(),
+        };
+        socket.to(room).emit("notification", leaveEvent);
       });
     }
   });
 
-  socket.on("chat-message", (msg, room) => {
+  socket.on("chat-message", (msg: ChatMessageEvent, room) => {
     if (room) {
       io.to(room).emit("chat-message", msg);
     } else {
