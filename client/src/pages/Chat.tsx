@@ -2,18 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import "./Chat.css";
-import { Credentials, Message } from "../types";
+import {
+  ChatMessageEvent,
+  Credentials,
+  JoinRoomEvent,
+  Message,
+} from "../types";
+import MessageComponent from "../components/Message";
 
 interface ChatProps {
   credentials: Credentials;
 }
 
 export default function Chat({ credentials }: ChatProps) {
-  const [message, setMessage] = useState("");
+  const [messageToSend, setMessageToSend] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentId, setCurrentId] = useState("");
   const socketRef = useRef<ReturnType<typeof io>>(null);
-  const messageEndRef = useRef<HTMLUListElement>(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const username = credentials.username;
   const room = credentials.room;
@@ -22,7 +28,12 @@ export default function Chat({ credentials }: ChatProps) {
   useEffect(() => {
     socketRef.current = io("ws://localhost:3000");
 
-    socketRef.current.emit("join-room", { username, room });
+    const joinRoomEvent: JoinRoomEvent = {
+      username,
+      room,
+    };
+
+    socketRef.current.emit("join-room", joinRoomEvent);
 
     socketRef.current.on("connect", () => {
       if (socketRef.current) {
@@ -74,59 +85,41 @@ export default function Chat({ credentials }: ChatProps) {
   }, [username, room, navigate]);
 
   function handleSubmit(event: React.FormEvent) {
-    const d = new Date();
-    const hours = d.getHours().toString().padStart(2, "0");
-    const minutes = d.getMinutes().toString().padStart(2, "0");
-
     event.preventDefault();
-    if (socketRef.current && message.trim()) {
-      socketRef.current.emit(
-        "chat-message",
-        {
-          id: socketRef.current.id ?? null,
-          username: username,
-          content: message,
-          timestamp: `${hours}:${minutes}`,
-        },
-        room
-      );
+    if (socketRef.current && messageToSend.trim()) {
+      const chatMessageEvent: ChatMessageEvent = {
+        id: socketRef.current.id ?? null,
+        username: username,
+        content: messageToSend,
+        timestamp: Date.now(),
+      };
+      socketRef.current.emit("chat-message", chatMessageEvent, room);
     }
-    setMessage("");
+    setMessageToSend("");
   }
 
   return (
     <div className="chat__room">
       <div className="chat__room__banner">{credentials.room}</div>
-      <ul className="messages" ref={messageEndRef}>
-        {messages.map((msg, index) =>
-          msg.id === "0" ? (
-            <li key={index} className="notification">
-              <div>{msg.content}</div>
-            </li>
-          ) : (
-            <li
-              key={index}
-              className={
-                msg.id === currentId ? "bubble__sender" : "bubble__receiver"
-              }
-            >
-              <div className="bubble__username">{msg.username}</div>
-              <div className="bubble__content">{msg.content}</div>
-              <small className="bubble__timestamp">{msg.timestamp}</small>
-            </li>
-          )
-        )}
-      </ul>
+      <div className="messages" ref={messageEndRef}>
+        {messages.map((message, index) => (
+          <MessageComponent
+            key={index}
+            message={message}
+            currentId={currentId}
+          />
+        ))}
+      </div>
       <form className="message__form" onSubmit={handleSubmit}>
         <input
           type="text"
           autoComplete="off"
           placeholder="Type your message..."
           maxLength={750}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={messageToSend}
+          onChange={(e) => setMessageToSend(e.target.value)}
         />
-        <button>Send</button>
+        <button type="submit">Send</button>
       </form>
     </div>
   );

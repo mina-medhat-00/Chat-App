@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import validateMiddleware from "../middleware/registrationValidation.js";
 
@@ -9,7 +9,7 @@ const db = [
   { email: "carl@email.com", password: "Carl!123" },
 ];
 
-const userController = (req, res) => {
+const userController = (req: Request, res: Response) => {
   const credentials = {
     email: req.body.email,
     password: req.body.password,
