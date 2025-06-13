@@ -12,7 +12,7 @@ const renderTimestamp = (timestamp: number) => {
   const minutes = d.getMinutes().toString().padStart(2, "0");
 
   return (
-    <span className="bubble__timestamp">
+    <span className="small">
       {hours}:{minutes}
     </span>
   );
@@ -20,17 +20,21 @@ const renderTimestamp = (timestamp: number) => {
 
 export default function MessageComponent({ message, currentId }: MessageProps) {
   return message.id === "0" ? (
-    <div className="notification">
+    <div className="text-center fw-bolder fs-6">
       <div>{message.content}</div>
     </div>
   ) : (
     <div
-      className={
-        message.id === currentId ? "bubble__sender" : "bubble__receiver"
-      }
+      className={`h-auto m-1 p-2 fs-6 text-break
+        ${
+          message.id === currentId
+            ? "ms-auto bg-primary text-white"
+            : "bg-secondary text-black"
+        }
+        `}
     >
-      <div className="bubble__username">{message.username}</div>
-      <div className="bubble__content">{message.content}</div>
+      <div className="fw-bold">{message.username}</div>
+      <div className="text-wrap">{message.content}</div>
       {renderTimestamp(message.timestamp)}
     </div>
   );

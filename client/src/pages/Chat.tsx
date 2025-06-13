@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import MessageComponent from "../../components/Message";
-import "./Chat.css";
+import MessageComponent from "../components/Message";
 import {
   ChatMessageEvent,
   Credentials,
   JoinRoomEvent,
   Message,
-} from "../../types";
+} from "../types";
 
 interface ChatProps {
   credentials: Credentials;
@@ -99,10 +98,15 @@ export default function Chat({ credentials }: ChatProps) {
   }
 
   return (
-    <div className="vh-100 bg-dark text-white">
-      <div className="d-flex flex-column align-items-center justify-content-center h-100">
-        <div className="chat__room__banner">{credentials.room}</div>
-        <div className="messages" ref={messageEndRef}>
+    <div className="mh bg-dark text-white">
+      <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+        <div className="w-100 text-center text-white bg-secondary p-2 fw-bolder">
+          <h3>{credentials.room}</h3>
+        </div>
+        <div
+          className="w-100 flex-grow-1 flex-column overflow-auto overflow-x-hidden"
+          ref={messageEndRef}
+        >
           {messages.map((message, index) => (
             <MessageComponent
               key={index}
@@ -111,14 +115,15 @@ export default function Chat({ credentials }: ChatProps) {
             />
           ))}
         </div>
-        <form className="message__form" onSubmit={handleSubmit}>
+        <form className="w-100 d-flex px-2" onSubmit={handleSubmit}>
           <input
             type="text"
-            autoComplete="off"
-            placeholder="Type your message..."
-            maxLength={500}
+            className="w-100"
             value={messageToSend}
             onChange={(e) => setMessageToSend(e.target.value)}
+            maxLength={500}
+            placeholder="Type your message..."
+            autoComplete="off"
           />
           <button type="submit" className="btn btn-primary">
             Send

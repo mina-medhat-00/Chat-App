@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import RoomManager from "./pages/RoomManager/RoomManager";
-import Chat from "./pages/Chat/Chat";
-import NotFound from "./pages/NotFound/NotFound";
+import RoomManager from "./pages/RoomManager";
+import Chat from "./pages/Chat";
+import NotFound from "./pages/NotFound";
 import FooterComponent from "./components/Footer";
 import { Credentials } from "./types";
 
