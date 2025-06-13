@@ -22,4 +22,9 @@ export interface NotificationEvent {
   timestamp: number;
 }
 
-export interface ChatMessageEvent extends NotificationEvent {}
+export interface ChatMessageEvent {
+  id: string | null;
+  username: string;
+  content: string;
+  timestamp: number;
+}

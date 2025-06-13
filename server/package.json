@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
-    "dev": "tsc-watch --noClear --onSuccess \"node ./dist/server.js\""
+    "dev": "tsc-watch --noClear --onSuccess \"node ./dist/server/server.js\""
   },
   "license": "ISC",
   "dependencies": {
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
-    "@types/express": "^5.0.0",
+    "@types/express": "^5.0.3",
     "eslint": "^9.20.1",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",

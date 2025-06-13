@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import MessageComponent from "../../components/Message";
 import "./Chat.css";
 import {
   ChatMessageEvent,
   Credentials,
   JoinRoomEvent,
   Message,
-} from "../types";
-import MessageComponent from "../components/Message";
+} from "../../types";
 
 interface ChatProps {
   credentials: Credentials;
@@ -99,28 +99,32 @@ export default function Chat({ credentials }: ChatProps) {
   }
 
   return (
-    <div className="chat__room">
-      <div className="chat__room__banner">{credentials.room}</div>
-      <div className="messages" ref={messageEndRef}>
-        {messages.map((message, index) => (
-          <MessageComponent
-            key={index}
-            message={message}
-            currentId={currentId}
+    <div className="vh-100 bg-dark text-white">
+      <div className="d-flex flex-column align-items-center justify-content-center h-100">
+        <div className="chat__room__banner">{credentials.room}</div>
+        <div className="messages" ref={messageEndRef}>
+          {messages.map((message, index) => (
+            <MessageComponent
+              key={index}
+              message={message}
+              currentId={currentId}
+            />
+          ))}
+        </div>
+        <form className="message__form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            autoComplete="off"
+            placeholder="Type your message..."
+            maxLength={500}
+            value={messageToSend}
+            onChange={(e) => setMessageToSend(e.target.value)}
           />
-        ))}
+          <button type="submit" className="btn btn-primary">
+            Send
+          </button>
+        </form>
       </div>
-      <form className="message__form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          autoComplete="off"
-          placeholder="Type your message..."
-          maxLength={750}
-          value={messageToSend}
-          onChange={(e) => setMessageToSend(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
     </div>
   );
 }

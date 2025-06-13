@@ -18,7 +18,7 @@ const renderTimestamp = (timestamp: number) => {
   );
 };
 
-export default function MessageComponent({ currentId, message }: MessageProps) {
+export default function MessageComponent({ message, currentId }: MessageProps) {
   return message.id === "0" ? (
     <div className="notification">
       <div>{message.content}</div>

@@ -1,8 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import RoomManager from "./pages/RoomManager";
-import Chat from "./pages/Chat";
-import LoginSignup from "./pages/LoginSignup";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import RoomManager from "./pages/RoomManager/RoomManager";
+import Chat from "./pages/Chat/Chat";
+import NotFound from "./pages/NotFound/NotFound";
+import FooterComponent from "./components/Footer";
 import { Credentials } from "./types";
 
 export default function App() {
@@ -12,18 +13,18 @@ export default function App() {
   });
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<RoomManager setCredentials={setCredentials} />}
-        ></Route>
-        <Route
-          path="/chat"
-          element={<Chat credentials={credentials} />}
-        ></Route>
-        <Route path="/account" element={<LoginSignup />}></Route>
-      </Routes>
-    </Router>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<RoomManager setCredentials={setCredentials} />}
+          />
+          <Route path="chat" element={<Chat credentials={credentials} />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+      <FooterComponent />
+    </>
   );
 }
