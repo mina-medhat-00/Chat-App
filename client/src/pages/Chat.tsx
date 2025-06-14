@@ -98,38 +98,36 @@ export default function Chat({ credentials }: ChatProps) {
   }
 
   return (
-    <div className="mh bg-dark text-white">
-      <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100">
-        <div className="w-100 text-center text-white bg-secondary p-2 fw-bolder">
-          <h3>{credentials.room}</h3>
-        </div>
-        <div
-          className="w-100 flex-grow-1 flex-column overflow-auto overflow-x-hidden"
-          ref={messageEndRef}
-        >
-          {messages.map((message, index) => (
-            <MessageComponent
-              key={index}
-              message={message}
-              currentId={currentId}
-            />
-          ))}
-        </div>
-        <form className="w-100 d-flex px-2" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            className="w-100"
-            value={messageToSend}
-            onChange={(e) => setMessageToSend(e.target.value)}
-            maxLength={500}
-            placeholder="Type your message..."
-            autoComplete="off"
-          />
-          <button type="submit" className="btn btn-primary">
-            Send
-          </button>
-        </form>
+    <div className="min-vh-100 d-flex flex-column bg-dark text-white">
+      <div className="text-center text-white bg-secondary p-2 fw-bold">
+        <h3>{credentials.room}</h3>
       </div>
+      <div
+        className="w-100 flex-grow-1 flex-column overflow-auto overflow-x-hidden"
+        ref={messageEndRef}
+      >
+        {messages.map((message, index) => (
+          <MessageComponent
+            key={index}
+            message={message}
+            currentId={currentId}
+          />
+        ))}
+      </div>
+      <form action="submit" className="d-flex p-2" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          className="form-control"
+          value={messageToSend}
+          onChange={(e) => setMessageToSend(e.target.value)}
+          maxLength={500}
+          placeholder="Type your message..."
+          autoComplete="off"
+        />
+        <button type="submit" className="btn btn-primary ms-2 fw-bold">
+          Send
+        </button>
+      </form>
     </div>
   );
 }

@@ -25,11 +25,11 @@ export default function MessageComponent({ message, currentId }: MessageProps) {
     </div>
   ) : (
     <div
-      className={`h-auto m-1 p-2 fs-6 text-break
+      className={`col-10 col-md-6 col-lg-4 h-auto m-2 p-2 text-break rounded
         ${
           message.id === currentId
             ? "ms-auto bg-primary text-white"
-            : "bg-secondary text-black"
+            : "bg-light text-black"
         }
         `}
     >
