@@ -7,28 +7,21 @@ interface RoomManagerProps {
 
 export default function RoomManager({ setCredentials }: RoomManagerProps) {
   const [formValues, setFormValues] = useState({ username: "", room: "" });
-  const [unameValid, setUnameValid] = useState(false);
-  const [roomValid, setRoomValid] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [validate, setValidate] = useState({ username: false, room: false });
+  const [touched, setTouched] = useState({ username: false, room: false });
   const navigate = useNavigate();
   const regex = /^[A-Za-z0-9s]{1,32}$/;
 
   const validateInput = (name: string, value: string) => {
-    if (name === "username") {
-      if (regex.test(value)) {
-        setUnameValid(true);
-      } else {
-        setUnameValid(false);
-      }
+    if (regex.test(value)) {
+      setValidate({ ...validate, [name]: true });
+    } else {
+      setValidate({ ...validate, [name]: false });
     }
+  };
 
-    if (name === "room") {
-      if (regex.test(value)) {
-        setRoomValid(true);
-      } else {
-        setRoomValid(false);
-      }
-    }
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setTouched({ ...touched, [e.target.name]: true });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +32,8 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true);
 
-    if (unameValid && roomValid) {
+    if (validate.username && validate.room) {
       setCredentials({
         username: formValues.username.trim(),
         room: formValues.room.trim(),
@@ -55,9 +47,7 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
       <div className="container p-4 col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5">
         <h3 className="mb-3 text-center">Create or Join Chat Room</h3>
         <form
-          className={`needs-validation bg-white text-dark p-4 rounded ${
-            formSubmitted ? "was-validated" : ""
-          }`}
+          className="bg-white text-dark p-4 rounded"
           action="submit"
           onSubmit={handleSubmit}
           noValidate
@@ -69,9 +59,13 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
             <input
               type="text"
               name="username"
-              className="form-control"
+              className={`form-control ${
+                touched.username && !validate.username ? "is-invalid" : ""
+              }`}
               value={formValues.username}
+              onBlur={handleBlur}
               onChange={handleChange}
+              autoComplete="off"
               required
             />
             <div className="invalid-feedback">
@@ -85,9 +79,13 @@ export default function RoomManager({ setCredentials }: RoomManagerProps) {
             <input
               type="text"
               name="room"
-              className="form-control"
+              className={`form-control ${
+                touched.room && !validate.room ? "is-invalid" : ""
+              }`}
               value={formValues.room}
+              onBlur={handleBlur}
               onChange={handleChange}
+              autoComplete="off"
               required
             />
             <div className="invalid-feedback">
