@@ -2,9 +2,9 @@ import { createServer } from "http";
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
-import "dotenv/config";
+import "dotenv/config.js";
 import process from "process";
-import userRoute from "./src/routes/userRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 import { ChatMessageEvent, NotificationEvent } from "../client/src/types.js";
 
