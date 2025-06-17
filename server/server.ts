@@ -1,6 +1,7 @@
 import { createServer } from "http";
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import { Server } from "socket.io";
 import "dotenv/config.js";
 import process from "process";
@@ -24,7 +25,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/api/users", userRoute);
+app.use("/api/v1/users", userRoute);
 
 io.on("connection", (socket) => {
   socket.on("join-room", ({ username, room }) => {
@@ -58,6 +59,15 @@ io.on("connection", (socket) => {
     }
   });
 });
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/chatcord")
+  .then(() => {
+    console.log("Connected to database");
+  })
+  .catch((err) => {
+    console.error("Error connecting to database", err);
+  });
 
 server.listen(port, () => {
   console.log(`Running on ws://localhost:${port}`);
