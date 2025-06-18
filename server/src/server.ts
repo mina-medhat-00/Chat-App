@@ -5,8 +5,7 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 import "dotenv/config.js";
 import userRoute from "./routes/userRoute.js";
-
-import { ChatMessageEvent, NotificationEvent } from "../client/src/types.js";
+import { ChatMessageEvent, NotificationEvent } from "./types/chat.js";
 
 const app = express();
 const server = createServer(app);
@@ -16,6 +15,11 @@ const io = new Server(server, {
   },
 });
 const port = process.env.PORT || 3000;
+const db = process.env.DB_URI;
+
+if (!db) {
+  throw new Error("DB_URI not found");
+}
 
 app.use(
   cors({
@@ -60,14 +64,14 @@ io.on("connection", (socket) => {
 });
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/chatcord")
+  .connect(db)
   .then(() => {
     console.log("Connected to database");
+    server.listen(port, () => {
+      console.log(`Running on ws://localhost:${port}`);
+    });
   })
-  .catch((err) => {
-    console.log("Error connecting to database", err);
+  .catch((error) => {
+    console.log("Error connecting to database", error);
+    process.exit(1);
   });
-
-server.listen(port, () => {
-  console.log(`Running on ws://localhost:${port}`);
-});

@@ -4,8 +4,9 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "tsc-watch --noClear --onSuccess \"node ./dist/server/server.js\""
+    "start": "node node ./dist/server.js",
+    "dev": "tsc-watch --noClear --onSuccess \"node ./dist/server.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "ISC",
   "dependencies": {
@@ -18,7 +19,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@tsconfig/node22": "^22.0.2",
     "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3",
     "eslint": "^9.20.1",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",
