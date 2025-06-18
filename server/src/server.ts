@@ -1,19 +1,10 @@
-import express from "express";
-import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
-import "dotenv/config.js";
-import userRoute from "./routes/userRoute.js";
+import "dotenv/config";
+import app from "./app.js";
 import { ChatMessageEvent, NotificationEvent } from "./types/chat.js";
 
-const app = express();
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
-});
 const port = process.env.PORT || 3000;
 const db = process.env.DB_URI;
 
@@ -21,14 +12,12 @@ if (!db) {
   throw new Error("DB_URI not found");
 }
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-  })
-);
-app.use(express.json());
-app.use("/api/users", userRoute);
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 io.on("connection", (socket) => {
   socket.on("join-room", ({ username, room }) => {
