@@ -1,10 +1,9 @@
-import { createServer } from "http";
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
+import { createServer } from "http";
 import { Server } from "socket.io";
+import mongoose from "mongoose";
 import "dotenv/config.js";
-import process from "process";
 import userRoute from "./routes/userRoute.js";
 
 import { ChatMessageEvent, NotificationEvent } from "../client/src/types.js";
@@ -25,7 +24,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/api/v1/users", userRoute);
+app.use("/api/users", userRoute);
 
 io.on("connection", (socket) => {
   socket.on("join-room", ({ username, room }) => {
@@ -66,7 +65,7 @@ mongoose
     console.log("Connected to database");
   })
   .catch((err) => {
-    console.error("Error connecting to database", err);
+    console.log("Error connecting to database", err);
   });
 
 server.listen(port, () => {
